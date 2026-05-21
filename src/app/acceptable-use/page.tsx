@@ -54,8 +54,7 @@ export default function AcceptableUsePage() {
           </p>
 
           <p className="pt-8">
-            Read also: <Link href="/honor-code" style={{ color: '#9775fa' }}>Academic honor code</Link>,{' '}
-            <Link href="/terms" style={{ color: '#9775fa' }}>Terms</Link>,{' '}
+            Read also: <Link href="/terms" style={{ color: '#9775fa' }}>Terms</Link>,{' '}
             <Link href="/privacy" style={{ color: '#9775fa' }}>Privacy</Link>.
           </p>
         </div>

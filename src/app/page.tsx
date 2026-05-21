@@ -130,7 +130,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <p className="text-sm mt-4" style={{ color: '#5a7dc4' }}>3 free drafts/month · No card · Read our <Link href="/honor-code" className="underline" style={{ color: '#7c8cc4' }}>honor code</Link></p>
+          <p className="text-sm mt-4" style={{ color: '#5a7dc4' }}>3 free drafts/month · No card.</p>
         </div>
 
         {/* ── Mock UI Card ── */}
@@ -218,21 +218,6 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ── Honor section ── */}
-      <section className="py-20 px-6" style={{ backgroundColor: '#030812' }}>
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#9775fa' }}>How to use it well</p>
-          <h2 className="text-3xl font-bold mb-4" style={{ color: '#e0e9ff' }}>A starting point, not a finish line.</h2>
-          <p className="text-lg leading-relaxed mb-6" style={{ color: '#94afee' }}>
-            Drafture writes a first draft in your voice. You edit it, verify what it claims, and put your thinking on top.
-            If your professor has banned AI assistance for an assignment, that&apos;s where the line is for that assignment.
-          </p>
-          <Link href="/honor-code" className="inline-flex items-center gap-2 text-sm font-semibold" style={{ color: '#9775fa' }}>
-            Read our honor code <ArrowRight className="w-4 h-4" />
-          </Link>
         </div>
       </section>
 
@@ -334,7 +319,6 @@ export default function Home() {
           </div>
           <p className="text-sm" style={{ color: '#2d5299' }}>© 2026 Drafture. Your voice, before 11:59 PM.</p>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm justify-center" style={{ color: '#2d5299' }}>
-            <Link href="/honor-code" className="hover:text-blue-300 transition-colors">Honor code</Link>
             <Link href="/acceptable-use" className="hover:text-blue-300 transition-colors">Acceptable use</Link>
             <Link href="/privacy" className="hover:text-blue-300 transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-blue-300 transition-colors">Terms</Link>

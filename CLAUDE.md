@@ -6,7 +6,7 @@
 2. **No "AI detection bypass" framing.** The product is a writing coach that produces a first draft in the student's voice. Never write copy that says "undetectable", "pass detection", "evade AI detectors", "bypass Turnitin", or similar. This is a hard veto on the panel and a Stripe AUP / Anthropic AUP risk.
 3. **Server-side auth only for /api/generate.** Never trust a client-supplied user_id. The route extracts the user from the Supabase cookie via `getCurrentProfile()`.
 4. **Never log raw prompts or raw drafts at production log level.** Generation logs include token counts and costs. Output content goes only to the `generations` table tied to the user.
-5. **Honor-code accepted_at must be set before any generation.** New signups have it set automatically. Migration users will need a one-time backfill.
+5. **All user-facing writing must go through `src/lib/writing-engine.ts`.** Use the primary writer plus safety/humanization pass and validator. Do not add direct one-pass prose endpoints.
 
 ## Panel
 
@@ -25,6 +25,7 @@ For any launch decision, copy change, or feature touching academic context, run 
 - `src/app/api/auth/*`. Supabase signup, login, logout, email-confirmation callback.
 - `src/app/api/stripe/*`. Checkout, webhook, customer portal.
 - `src/app/api/generate/route.ts`. The four-pass generation pipeline. Auth, plan, and spend gates run before any Anthropic call.
+- `src/lib/writing-engine.ts`. Shared primary-plus-safety writing architecture used by generated posts and notes.
 - `src/lib/humanization/prompts.ts`. Core IP. The system prompts for the draft and humanizer passes. Touch carefully.
 - `src/lib/humanization/forbidden-patterns.ts`. Vocabulary database. Do not expand without an AI Quality Lead review.
 - `src/lib/plan.ts`. Atomic check-and-increment of the monthly counter. Calls the Postgres RPC `increment_usage_if_under_limit`.

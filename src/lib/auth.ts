@@ -14,7 +14,6 @@ export type Profile = {
   plan_renews_at: string | null
   stripe_customer_id: string | null
   stripe_subscription_id: string | null
-  honor_code_accepted_at: string | null
   cohort_week: string | null
   activated_at: string | null
   last_active_at: string | null

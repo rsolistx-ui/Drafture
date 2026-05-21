@@ -17,14 +17,10 @@ ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS plan_renews_at   timestamptz,    -- Stripe current_period_end
   ADD COLUMN IF NOT EXISTS plan_status      text DEFAULT 'active'
     CHECK (plan_status IN ('active', 'past_due', 'canceled', 'trialing', 'incomplete')),
-  ADD COLUMN IF NOT EXISTS marketing_email_opt_in boolean NOT NULL DEFAULT true,
-  ADD COLUMN IF NOT EXISTS honor_code_accepted_at timestamptz;
+  ADD COLUMN IF NOT EXISTS marketing_email_opt_in boolean NOT NULL DEFAULT true;
 
 COMMENT ON COLUMN public.profiles.plan_limit IS
   'Monthly generation cap. NULL means unlimited. Set by Stripe webhook based on price ID.';
-
-COMMENT ON COLUMN public.profiles.honor_code_accepted_at IS
-  'Timestamp the user accepted the academic honor code. Required before any generation.';
 
 -- ─── 2. Backfill plan_limit for existing rows ──────────────────────────────
 UPDATE public.profiles

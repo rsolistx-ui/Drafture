@@ -15,7 +15,6 @@ export default function SignupPage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [honorAck, setHonorAck] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -23,10 +22,6 @@ export default function SignupPage() {
     e.preventDefault()
     setError(null)
 
-    if (!honorAck) {
-      setError('Please confirm you understand the academic honor code.')
-      return
-    }
     if (password.length < 8) {
       setError('Password must be at least 8 characters.')
       return
@@ -138,21 +133,6 @@ export default function SignupPage() {
                 } as React.CSSProperties}
               />
             </div>
-
-            <label className="flex items-start gap-3 p-3 rounded-xl cursor-pointer" style={{ backgroundColor: 'rgba(7,14,33,0.6)', border: '1px solid rgba(26,58,110,0.6)' }}>
-              <input
-                type="checkbox"
-                checked={honorAck}
-                onChange={(e) => setHonorAck(e.target.checked)}
-                className="mt-1 flex-shrink-0"
-                style={{ accentColor: '#7c3aed' }}
-              />
-              <span className="text-xs leading-relaxed" style={{ color: '#94afee' }}>
-                I understand Drafture is a writing coach. I will treat its drafts as starting points, edit them in my own voice, and follow my school&apos;s academic integrity policy. I&apos;ve read the{' '}
-                <Link href="/honor-code" className="font-semibold underline" style={{ color: '#9775fa' }}>honor code</Link> and{' '}
-                <Link href="/terms" className="font-semibold underline" style={{ color: '#9775fa' }}>terms</Link>.
-              </span>
-            </label>
 
             <Button type="submit" variant="gradient" className="w-full" size="lg" disabled={submitting}>
               {submitting ? 'Creating account…' : 'Create free account'}

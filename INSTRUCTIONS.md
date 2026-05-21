@@ -17,13 +17,13 @@ If you skipped the conversation, here is what's new since the codebase moved out
 - Auth wired end to end. Real signup, login, logout, email-confirmation callback. `middleware.ts` enforces session on `/dashboard/**` and bounces logged-in users off `/login` and `/signup`.
 - Stripe wired end to end. Checkout creation, webhook handler, customer portal. Plan changes from Stripe sync into `profiles.plan` + `profiles.plan_limit` automatically.
 - Server-side plan + monthly usage enforcement on `/api/generate`. Atomic check-and-increment via Postgres RPC. Free 3, Starter 30, Unlimited none.
-- New migration `003_subscriptions_and_usage.sql` adds `usage_counters`, `spend_ledger`, `generations`, the `increment_usage_if_under_limit` RPC, and extra `profiles` columns (`plan_limit`, `plan_renews_at`, `plan_status`, `honor_code_accepted_at`).
-- Honor-code gate. Signups must check the honor-code box. `/api/generate` blocks any user without `honor_code_accepted_at`.
-- Legal pages added. `/privacy`, `/terms`, `/acceptable-use`, `/honor-code`. Footer rewritten to link them.
+- New migration `003_subscriptions_and_usage.sql` adds `usage_counters`, `spend_ledger`, `generations`, the `increment_usage_if_under_limit` RPC, and extra `profiles` columns (`plan_limit`, `plan_renews_at`, `plan_status`).
+- Legal pages added. `/privacy`, `/terms`, `/acceptable-use`. Footer rewritten to link them.
 - Marketing repositioned. The hero, features, and meta description no longer claim to "pass detection" or "evade detectors". The product is now positioned as a writing coach that produces a first draft in the student's voice. Three panel seats hold hard veto on this framing.
 - `/robots.ts`, `/sitemap.ts`, `/not-found.tsx`, `/error.tsx` added.
 - `.env.example` added. CLAUDE.md replaced with a full project rules file.
 - `@supabase/ssr` added to dependencies. Run `npm install` to fetch it.
+- Shared writing architecture added at `src/lib/writing-engine.ts`. Generated posts and notes now use one primary writer, one safety/humanization pass, and one validator instead of separate raw one-pass outputs.
 
 ---
 
@@ -60,24 +60,14 @@ Verification queries to paste into the SQL editor after migration 3:
 ```sql
 SELECT column_name FROM information_schema.columns
 WHERE table_schema = 'public' AND table_name = 'profiles'
-  AND column_name IN ('plan_limit', 'plan_renews_at', 'plan_status', 'honor_code_accepted_at');
--- expect 4 rows
+  AND column_name IN ('plan_limit', 'plan_renews_at', 'plan_status');
+-- expect 3 rows
 
 SELECT pg_get_functiondef('public.increment_usage_if_under_limit(uuid,text)'::regprocedure) IS NOT NULL;
 -- expect t
 ```
 
-### 2.2 Backfill honor code for existing test users
-
-If you have any pre-existing accounts from the old codebase:
-
-```sql
-UPDATE public.profiles
-SET honor_code_accepted_at = COALESCE(honor_code_accepted_at, created_at)
-WHERE honor_code_accepted_at IS NULL;
-```
-
-### 2.3 Auth settings
+### 2.2 Auth settings
 
 In Supabase dashboard, Authentication > URL Configuration:
 - Site URL: `https://app.getdrafture.com` (or whatever your production domain is)
@@ -86,7 +76,7 @@ In Supabase dashboard, Authentication > URL Configuration:
 In Authentication > Providers:
 - Email: enabled. Confirm email: ON for production.
 
-### 2.4 Grab keys
+### 2.3 Grab keys
 
 Settings > API. Copy:
 - Project URL > `NEXT_PUBLIC_SUPABASE_URL`
@@ -211,8 +201,8 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 
 Then in a browser:
 
-1. Visit `http://localhost:3000` and confirm the new copy renders ("first draft in your voice", honor code link in subhead, footer has Honor Code / Acceptable Use / Privacy / Terms).
-2. Click "Start for free", create an account with the honor code box checked. Confirm email if prompted.
+1. Visit `http://localhost:3000` and confirm the new copy renders ("first draft in your voice", footer has Acceptable Use / Privacy / Terms).
+2. Click "Start for free", create an account. Confirm email if prompted.
 3. Land on `/dashboard`. Generate one draft. Confirm it works and shows month count.
 4. Go to `/pricing`, click Get Starter or Go Unlimited. Use Stripe test card `4242 4242 4242 4242`, any future date, any CVC, any ZIP.
 5. After redirect, refresh dashboard. Confirm the plan badge updates and `profiles.plan_limit` in Supabase changes from 3 to 30 or null.
@@ -251,8 +241,8 @@ Run the panel before announcing. From `00_Panel/invocations.md`:
 
 Three veto seats must hit green:
 
-- **Academic Integrity Officer** confirms no copy claims to "pass detection" or to be "undetectable", the honor code page is live, the signup honor code checkbox is required, and `/api/generate` blocks users without `honor_code_accepted_at`.
-- **Trust and Safety / Counsel** confirms terms, acceptable use, privacy, and honor code all render at their public URLs and are linked from the footer; Stripe live keys are connected; webhook signature verification is on.
+- **Academic Integrity Officer** confirms no copy claims to "pass detection" or to be "undetectable".
+- **Trust and Safety / Counsel** confirms terms, acceptable use, and privacy all render at their public URLs and are linked from the footer; Stripe live keys are connected; webhook signature verification is on.
 - **Privacy and Data Protection Officer** confirms Supabase RLS is enabled on `analytics_events`, `usage_counters`, and `generations`; the privacy page lists all subprocessors; and a deletion path is documented.
 
 If any of those is yellow or red, do not launch. Fix and re-convene.
@@ -310,6 +300,7 @@ These are tracked as week-1 follow-ups, not launch blockers. The panel signed of
 - Panel: `00_Panel/`
 - Schema: `migrations/`
 - Generation engine: `src/app/api/generate/route.ts` and `src/lib/humanization/`
+- Shared writing engine: `src/lib/writing-engine.ts`
 - Auth: `src/lib/supabase-server.ts`, `src/lib/auth.ts`, `middleware.ts`
 - Billing: `src/lib/stripe.ts`, `src/app/api/stripe/`
 - Plan enforcement: `src/lib/plan.ts`

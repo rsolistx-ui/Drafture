@@ -94,7 +94,7 @@ In your browser, go to http://localhost:3000
 **Did it work?**
 - You should see the dark purple Drafture landing page.
 - The hero should say "Get unstuck in 60 seconds."
-- The footer should have four links: Honor code, Acceptable use, Privacy, Terms.
+- The footer should have three links: Acceptable use, Privacy, Terms.
 - Click each footer link. Each page should render.
 
 If anything looks wrong: stop the server (Ctrl+C in the terminal) and paste me the error.
@@ -215,7 +215,7 @@ npm run dev
 
 **Did it work?**
 - Go to http://localhost:3000/signup
-- Enter a real email you can check, any password 8+ characters, and check the honor code box
+- Enter a real email you can check and any password 8+ characters
 - Click "Create free account"
 - It should take you to the dashboard (no email verification because you turned that off in step 2.6)
 
@@ -223,9 +223,9 @@ In Supabase, click "Authentication" then "Users". You should see your test user.
 
 In a new SQL query, run:
 ```sql
-SELECT id, plan, plan_limit, honor_code_accepted_at FROM public.profiles;
+SELECT id, plan, plan_limit FROM public.profiles;
 ```
-You should see one row with `plan = free`, `plan_limit = 3`, and a recent timestamp for `honor_code_accepted_at`.
+You should see one row with `plan = free` and `plan_limit = 3`.
 
 If any of that fails, stop and paste me the error.
 
@@ -447,8 +447,8 @@ Restart dev server. Generate a draft. Within a minute or so, you should see even
 Before we put anything on the internet, run this checklist locally. Open a fresh browser window in incognito mode (to start clean).
 
 1. http://localhost:3000 loads, hero says "Get unstuck in 60 seconds"
-2. Footer links work: Honor code, Acceptable use, Privacy, Terms
-3. Sign up with a fresh email and the honor code checkbox checked
+2. Footer links work: Acceptable use, Privacy, Terms
+3. Sign up with a fresh email
 4. Land on dashboard, see the plan badge somewhere
 5. Generate a draft, it works
 6. Generate 3 more drafts. The 4th should be blocked with "monthly limit reached" because you're on Free with 3/month

@@ -418,11 +418,12 @@ export function buildDraftPrompt(params: {
   wordMin?: number
   wordMax?: number
   styleFingerprint?: import('@/lib/style/types').StyleFingerprint | null
+  variationDirective?: string
 }): string {
   const {
     professorPrompt, postType, tone, course,
     classmatePost, instructorPost, professorCriteria, videoSummary, courseNotes,
-    wordMin, wordMax, styleFingerprint,
+    wordMin, wordMax, styleFingerprint, variationDirective,
   } = params
 
   const discipline = inferDiscipline(course)
@@ -465,6 +466,10 @@ Calibrate your word choices, rhythm, and structural patterns to feel like THIS s
     ? `\n\nCOURSE MATERIAL NOTES (concepts, terms, and ideas from the student's actual course readings — draw on these naturally where relevant to the discussion prompt. Reference them as you would something you read and remember, not as "the notes say" or "according to the material"):\n${courseNotes}`
     : ''
 
+  const uniquenessContext = variationDirective
+    ? `\n\nBESPOKE VARIATION REQUIREMENT:\n${variationDirective}\nThis response must be freshly constructed for this exact request. Do not recycle a generic outline, stock opener, stock personal example, or a previous structural pattern. If the prompt is similar to one you have seen before, choose a different angle, paragraph shape, and example path.`
+    : ''
+
   const toneMap: Record<string, string> = {
     thoughtful: 'Engaged with the material, have a real take, thoughtful but casual. Not trying to impress.',
     casual: "You understand the material but you're not performing. Relaxed, direct, like texting a smart friend.",
@@ -473,7 +478,7 @@ Calibrate your word choices, rhythm, and structural patterns to feel like THIS s
   const toneInstruction = toneMap[tone] || toneMap.thoughtful
 
   if (postType === 'initial') {
-    return `Write an initial discussion board post for this prompt.${courseContext}${disciplineContext}${styleContext}${criteriaContext}${videoContext}${notesContext}
+    return `Write an initial discussion board post for this prompt.${courseContext}${disciplineContext}${styleContext}${criteriaContext}${videoContext}${notesContext}${uniquenessContext}
 
 DISCUSSION PROMPT: "${professorPrompt}"
 
@@ -486,7 +491,7 @@ Do NOT start with your main thesis. Do NOT wrap up neatly. Do NOT list exactly 3
   }
 
   if (postType === 'classmate') {
-    return `Write a reply to a classmate's discussion post.${courseContext}${disciplineContext}${styleContext}${criteriaContext}${videoContext}${notesContext}
+    return `Write a reply to a classmate's discussion post.${courseContext}${disciplineContext}${styleContext}${criteriaContext}${videoContext}${notesContext}${uniquenessContext}
 
 ORIGINAL DISCUSSION PROMPT: "${professorPrompt}"
 
@@ -502,7 +507,7 @@ Never open with any form of praise or agreement validation.`
   }
 
   if (postType === 'instructor') {
-    return `Write a reply to your instructor's response to your discussion post.${courseContext}${disciplineContext}${styleContext}${criteriaContext}${videoContext}${notesContext}
+    return `Write a reply to your instructor's response to your discussion post.${courseContext}${disciplineContext}${styleContext}${criteriaContext}${videoContext}${notesContext}${uniquenessContext}
 
 ORIGINAL DISCUSSION TOPIC: "${professorPrompt}"
 

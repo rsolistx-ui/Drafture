@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { getSupabaseServer } from '@/lib/supabase-server'
-import { getSupabaseAdmin } from '@/lib/supabase-admin'
 import { rateLimit, getClientIp, LIMITS } from '@/lib/rate-limit'
 import { trackServer } from '@/lib/analytics/events'
 
@@ -43,15 +42,6 @@ export async function POST(req: Request) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 })
-  }
-
-  // Mark honor code accepted via service role (the trigger created the profile row).
-  const admin = getSupabaseAdmin()
-  if (admin && data.user?.id) {
-    await admin
-      .from('profiles')
-      .update({ honor_code_accepted_at: new Date().toISOString() })
-      .eq('id', data.user.id)
   }
 
   // Fire signup event.
