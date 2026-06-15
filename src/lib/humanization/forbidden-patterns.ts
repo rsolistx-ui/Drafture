@@ -48,12 +48,14 @@ export const FORBIDDEN_WORDS: string[] = [
   'truly', 'certainly', 'undoubtedly', 'undeniably',
   'absolutely', 'profoundly', 'fundamentally', 'inherently',
   'intrinsically', 'essentially', 'inherent', 'integral',
+  'clearly', 'obviously', 'definitely',
   'profound', 'significant', 'substantial', 'considerable',
   'remarkable', 'noteworthy', 'notable', 'notably',
   'groundbreaking', 'revolutionary', 'transformative', 'unprecedented',
   'innovative', 'innovation', 'cutting-edge', 'state-of-the-art',
   'pivotal', 'paramount', 'indispensable', 'invaluable',
   'comprehensive', 'robust', 'holistic', 'synergistic', 'synergy',
+  'breathtaking', 'powerful', 'leading', 'trusted', 'essential', 'crucial', 'vital',
 
   // ── 4. Academic-sounding but AI-overused verbs ────────────────────────────
   'foster', 'fosters', 'fostering', 'fostered',
@@ -75,6 +77,7 @@ export const FORBIDDEN_WORDS: string[] = [
   'interplay', 'intersection', 'convergence',
   'nuance', 'nuanced', 'multifaceted', 'multidimensional',
   'complexity', 'intricacy', 'intricacies',
+  'cohesive', 'authentic', 'authentically',
   'implications', 'ramifications',   // "has significant implications"
   'stakeholder', 'stakeholders',
   'myriad',    // AI loves obscure synonyms for "many"
@@ -87,6 +90,7 @@ export const FORBIDDEN_WORDS: string[] = [
   'one could argue', 'some might say', 'it can be argued',
   'one might suggest', 'one might consider',
   'it is worth noting', 'it is worth mentioning', 'it is worth considering',
+  'worth noting', 'worth mentioning',
   'it is important to note', 'it is important to consider',
   'it should be noted', 'it should be mentioned',
   'it is interesting to note', 'it is interesting that',
@@ -97,6 +101,7 @@ export const FORBIDDEN_WORDS: string[] = [
   'without a doubt', 'without question',
   'cannot be overstated', 'cannot be understated',
   'of utmost importance', 'of paramount importance',
+  'no discussion would be complete without',
   'plays a crucial role', 'plays an important role', 'plays a key role',
   'plays a significant role', 'plays a vital role',
   'a testament to', 'speaks to', 'speaks volumes',
@@ -118,6 +123,7 @@ export const FORBIDDEN_WORDS: string[] = [
   'key' ,           // "key aspects", "key takeaways", "key factors" — ban as adjective
   'impactful',      // not a real word and very AI
   'actionable',
+  'tailored', 'personalized', 'standout',
   'deep dive',
   'circle back',
   'bandwidth',      // metaphorical use
@@ -136,6 +142,12 @@ export const FORBIDDEN_WORDS: string[] = [
   'a wide range of', 'a wide variety of',
   'as a result',   // transition
   'as such',       // transition
+  'here is your', "here's a draft", "here's the thing", 'the truth is',
+  "let's break it down", 'to put it simply',
+  'up to my last training update', 'as of my last update',
+  'turn0search', 'source needed',
+  'designed to help you', 'tailored to your needs', 'personalized experience',
+  "that's where", 'more than just', 'not merely',
   'in today\'s world', 'in today\'s society', 'in modern society',
   "in today's fast-paced", "in today's interconnected",
   'throughout history', 'since the dawn of',
@@ -151,6 +163,8 @@ export const FORBIDDEN_WORDS: string[] = [
   'i completely agree', 'i totally agree', 'i wholeheartedly agree',
   'i appreciate your', 'thank you for sharing',
   'what a great', 'what an interesting',
+  'thanks for your patience', 'i apologize for any inconvenience caused',
+  'we value your feedback', 'your request has been noted',
 ]
 
 /**
@@ -167,6 +181,7 @@ export const FORBIDDEN_CONSTRUCTIONS = [
 
   // Perfect parallel structure — "not only X but also Y"
   'not only X but also Y',
+  'whether you are X or Y',
 
   // Subject + "plays a role in" + object
   'plays a [adj] role',
@@ -182,4 +197,11 @@ export const FORBIDDEN_CONSTRUCTIONS = [
 
   // The "X is Y" definition sentence that opens a paragraph
   'definitional-paragraph-opener',    // "Cognitive dissonance is the psychological..."
+
+  // Roadmap intros and perfectly tidy AI content packaging
+  'roadmap-intro',                    // "This post will explore..." / "Below, I will cover..."
+  'bold-label-colon-bullets',
+  'uniform-paragraph-lengths',
+  'source-shaped-hallucination',
+  'prompt-response-residue',
 ]

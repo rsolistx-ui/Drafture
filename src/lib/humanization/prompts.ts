@@ -7,7 +7,7 @@
  *   minor = significant quality improvement
  *   patch = small word/phrase tweak
  */
-export const PROMPT_VERSION = 'v1.4.0'   // course notes context injection added
+export const PROMPT_VERSION = 'v1.5.0'   // 2026 AI-tells refresh added
 
 /**
  * Core IP: Proprietary two-pass AI-detection-resistant generation system
@@ -142,9 +142,9 @@ STEP 4 — ABSOLUTE VOCABULARY BANS
 
 These words appear in AI text at 10-50x the rate of human text. They will get flagged:
 
-NEVER USE: furthermore, moreover, additionally, consequently, subsequently, nevertheless, nonetheless, therefore, thus, hence, pivotal, paramount, multifaceted, tapestry, landscape, realm, domain, sphere, delve, unpack, underscore, illuminate, nuanced, robust, comprehensive, facilitate, leverage, foster, empower, cultivate, transformative, groundbreaking, revolutionary, innovative, holistic, synergy, myriad, plethora, intricate, profound, significant, substantial, notable, noteworthy, remarkable, highlight, explore, examine, demonstrate, illustrate, reflect (as "this reflects"), signify, indicate (academic use), suggest (academic use), key (as adjective), impactful, stakeholder, dynamic (as noun), interplay, paradigm, framework (overused), ramification, implication (used vaguely)
+NEVER USE: furthermore, moreover, additionally, consequently, subsequently, nevertheless, nonetheless, therefore, thus, hence, pivotal, paramount, multifaceted, tapestry, landscape, realm, domain, sphere, delve, unpack, navigate, underscore, illuminate, nuanced, robust, comprehensive, facilitate, leverage, foster, empower, cultivate, transformative, groundbreaking, revolutionary, innovative, holistic, synergy, myriad, plethora, intricate, profound, significant, substantial, notable, noteworthy, remarkable, breathtaking, powerful, leading, trusted, essential, crucial, vital, cohesive, authentic/authentically, tailored, personalized, resonate, highlight, explore, examine, demonstrate, illustrate, reflect (as "this reflects"), signify, indicate (academic use), suggest (academic use), key (as adjective), impactful, actionable, stakeholder, dynamic (as noun), interplay, paradigm, framework (overused), ramification, implication (used vaguely)
 
-NEVER USE THESE PHRASES: "it is worth noting," "it is important to," "it should be noted," "in today's world," "in modern society," "shed light on," "at the end of the day," "in conclusion," "to summarize," "in essence," "it can be argued," "one could argue," "plays a role," "a testament to," "speaks to," "as a result" (as transition), "in terms of," "moving forward," "going forward," "as such," "taken together," "all things considered," "without a doubt," "cannot be overstated," "at its core," "lies at the heart"
+NEVER USE THESE PHRASES: "it is worth noting," "it is important to," "it should be noted," "no discussion would be complete without," "in today's world," "in modern society," "shed light on," "at the end of the day," "in conclusion," "to summarize," "in essence," "overall" as a conclusion opener, "it can be argued," "one could argue," "plays a role," "a testament to," "speaks to," "as a result" (as transition), "in terms of," "moving forward," "going forward," "as such," "taken together," "all things considered," "without a doubt," "cannot be overstated," "at its core," "lies at the heart," "not only X but also Y," "more than just," "not merely X but Y," "here's the thing," "the truth is," "let's break it down," "to put it simply"
 
 ═══════════════════════════════════════════════
 STEP 5 — STRUCTURAL RULES
@@ -220,9 +220,9 @@ STEP 3 — VOICE AND STYLE
 STEP 4 — VOCABULARY BANS (same as all posts)
 ═══════════════════════════════════════════════
 
-NEVER USE: furthermore, moreover, additionally, consequently, subsequently, nevertheless, nonetheless, therefore, thus, hence, pivotal, paramount, multifaceted, tapestry, nuanced, robust, comprehensive, facilitate, leverage, foster, empower, transformative, innovative, holistic, myriad, plethora, profound, significant, substantial, highlight, explore, examine, demonstrate, illustrate, key (adjective), stakeholder, interplay, paradigm, ramification
+NEVER USE: furthermore, moreover, additionally, consequently, subsequently, nevertheless, nonetheless, therefore, thus, hence, pivotal, paramount, multifaceted, tapestry, nuanced, robust, comprehensive, facilitate, leverage, foster, empower, transformative, innovative, holistic, myriad, plethora, profound, significant, substantial, breathtaking, essential, crucial, vital, cohesive, authentic/authentically, tailored, personalized, resonate, highlight, explore, examine, demonstrate, illustrate, key (adjective), actionable, stakeholder, interplay, paradigm, ramification
 
-NEVER USE THESE PHRASES: "it is worth noting," "it is important to," "in conclusion," "to summarize," "in essence," "it can be argued," "plays a role," "a testament to," "as a result," "in terms of," "moving forward," "as such"
+NEVER USE THESE PHRASES: "it is worth noting," "it is important to," "it should be noted," "no discussion would be complete without," "in conclusion," "to summarize," "in essence," "overall" as a conclusion opener, "it can be argued," "plays a role," "a testament to," "as a result," "in terms of," "moving forward," "as such," "not only X but also Y," "more than just," "here's the thing," "the truth is," "let's break it down"
 
 ═══════════════════════════════════════════════
 STEP 5 — STRUCTURAL RULES
@@ -289,9 +289,9 @@ STEP 4 — VOCABULARY BANS
 
 NEVER OPEN WITH: "Great feedback!", "What an insightful response!", "You make such an excellent point!", "I really appreciate your insight," "Thank you for your feedback" (too generic — reference something specific instead)
 
-NEVER USE: furthermore, moreover, pivotal, paramount, multifaceted, nuanced, robust, comprehensive, facilitate, leverage, foster, transformative, innovative, holistic, myriad, profound, significant, substantial, highlight, explore, examine, demonstrate, illuminate, delve, key (adjective), stakeholder, interplay, paradigm
+NEVER USE: furthermore, moreover, pivotal, paramount, multifaceted, nuanced, robust, comprehensive, facilitate, leverage, foster, transformative, innovative, holistic, myriad, profound, significant, substantial, breathtaking, essential, crucial, vital, cohesive, authentic/authentically, tailored, personalized, resonate, highlight, explore, examine, demonstrate, illuminate, delve, unpack, key (adjective), actionable, stakeholder, interplay, paradigm
 
-NEVER USE THESE PHRASES: "it is worth noting," "it is important to," "in conclusion," "to summarize," "plays a role," "a testament to," "in terms of," "as a result," "moving forward"
+NEVER USE THESE PHRASES: "it is worth noting," "it is important to," "it should be noted," "no discussion would be complete without," "in conclusion," "to summarize," "overall" as a conclusion opener, "plays a role," "a testament to," "in terms of," "as a result," "moving forward," "not only X but also Y," "more than just," "here's the thing," "the truth is"
 
 ═══════════════════════════════════════════════
 STEP 5 — STRUCTURAL RULES
@@ -326,10 +326,10 @@ Run all of these checks. Flag every violation.
 
 CHECK 1 — FORBIDDEN VOCABULARY
 These words appear at 10-50x normal rates in AI text. Any occurrence = flag:
-furthermore, moreover, additionally, consequently, subsequently, nevertheless, nonetheless, therefore, thus, hence, pivotal, paramount, multifaceted, tapestry, landscape, realm, domain, sphere, delve, unpack, underscore, illuminate, nuanced, robust, comprehensive, facilitate, leverage, foster, empower, cultivate, harness, bolster, transformative, groundbreaking, revolutionary, innovative, holistic, synergy, myriad, plethora, intricate, profound, significant (used vaguely), substantial (used vaguely), notable, noteworthy, remarkable, highlight (verb), explore (verb), examine (verb), demonstrate (academic use), illustrate (academic use), reflect (as "this reflects"), signify, indicate (academic), suggest (academic), key (adjective before noun), impactful, stakeholder, dynamic (noun), interplay, paradigm, framework (vague), ramification, implication (vague), truly, certainly, undoubtedly, undeniably, absolutely, profoundly, fundamentally, inherently, essentially, integral, indispensable, invaluable, comprehensive, robust
+furthermore, moreover, additionally, consequently, subsequently, nevertheless, nonetheless, therefore, thus, hence, pivotal, paramount, multifaceted, tapestry, landscape, realm, domain, sphere, delve, unpack, navigate, underscore, illuminate, nuanced, robust, comprehensive, facilitate, leverage, foster, empower, cultivate, harness, bolster, transformative, groundbreaking, revolutionary, innovative, holistic, synergy, myriad, plethora, intricate, profound, significant (used vaguely), substantial (used vaguely), notable, noteworthy, remarkable, breathtaking, powerful, leading, trusted, essential, crucial, vital, cohesive, authentic/authentically, tailored, personalized, resonate, highlight (verb), explore (verb), examine (verb), demonstrate (academic use), illustrate (academic use), reflect (as "this reflects"), signify, indicate (academic), suggest (academic), key (adjective before noun), impactful, actionable, stakeholder, dynamic (noun), interplay, paradigm, framework (vague), ramification, implication (vague), truly, certainly, clearly, obviously, definitely, undoubtedly, undeniably, absolutely, profoundly, fundamentally, inherently, essentially, integral, indispensable, invaluable, comprehensive, robust
 
 CHECK 2 — FORBIDDEN PHRASES
-"it is worth noting," "it is important to," "it should be noted," "in today's world," "in modern society," "shed light on," "at the end of the day," "in conclusion," "to summarize," "in essence," "it can be argued," "one could argue," "plays a role," "plays a crucial role," "a testament to," "speaks to," "speaks volumes," "lies at the heart," "at its core," "in terms of," "moving forward," "going forward," "as such," "as a result" (transition), "taken together," "all things considered," "without a doubt," "cannot be overstated," "it goes without saying," "needless to say," "of utmost importance," "worthy of note"
+"it is worth noting," "it is worth mentioning," "it is important to," "it should be noted," "no discussion would be complete without," "in today's world," "in modern society," "shed light on," "at the end of the day," "in conclusion," "to summarize," "in essence," "overall" as a conclusion opener, "it can be argued," "one could argue," "plays a role," "plays a crucial role," "a testament to," "speaks to," "speaks volumes," "lies at the heart," "at its core," "in terms of," "moving forward," "going forward," "as such," "as a result" (transition), "taken together," "all things considered," "without a doubt," "cannot be overstated," "it goes without saying," "needless to say," "of utmost importance," "worthy of note," "not only X but also Y," "whether you're X or Y," "more than just," "not merely X but Y," "here's the thing," "the truth is," "let's break it down," "to put it simply"
 
 CHECK 3 — PATTERN OF THREES
 If the text lists exactly 3 examples, reasons, or items in sequence — this is an AI fingerprint. Flag it.
@@ -375,6 +375,10 @@ CHECK 13 — HOLLOW PERSONAL ANECDOTE
 If there's a personal example but it's vague ("I've noticed in my own experience that...") — flag it.
 → Make it specific. Add a detail that makes it feel real: a name, a place, a specific outcome, a specific moment.
 
+CHECK 14 — SOURCE OR PROMPT RESIDUE
+If the text contains fake citation shapes, broken links, DOI/ISBN-looking claims without sources, "studies show" without a named source, tool residue like "turn0search," or prompt-response leftovers like "here is your draft" — flag it.
+→ Remove the residue or replace it with a concrete, verified reference already present in the user's input. Never invent a source.
+
 ══════════════════════════════════════════════════
 PROCESS B: REWRITING RULES
 ══════════════════════════════════════════════════
@@ -385,7 +389,7 @@ For each flagged item:
 - Do not introduce new AI tells while fixing old ones
 - Do not change anything that is already working — "if it ain't flagged, don't fix it"
 
-After rewriting, do a final scan of your output through all 13 checks before outputting.
+After rewriting, do a final scan of your output through all 14 checks before outputting.
 
 ══════════════════════════════════════════════════
 WORD COUNT VALIDATION
@@ -524,7 +528,7 @@ Open with one brief, specific acknowledgment (reference something from what they
 }
 
 export function buildHumanizerPrompt(draft: string, postType: string, wordTarget: string): string {
-  return `Run your full 13-point detection and rewrite process on this ${postType} discussion post. Target word count: ${wordTarget}.
+  return `Run your full 14-point detection and rewrite process on this ${postType} discussion post. Target word count: ${wordTarget}.
 
 POST TO ANALYZE AND REWRITE:
 ---

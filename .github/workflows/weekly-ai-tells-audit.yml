@@ -1,0 +1,100 @@
+name: Weekly AI Tells Audit
+
+on:
+  schedule:
+    # Fridays at 15:00 UTC. This is 9 AM CST / 10 AM CDT.
+    - cron: "0 15 * * 5"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  create-audit-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create weekly AI tells audit issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner
+            const repo = context.repo.repo
+            const label = 'weekly-ai-tells-audit'
+
+            const existingLabels = await github.paginate(github.rest.issues.listLabelsForRepo, {
+              owner,
+              repo,
+              per_page: 100,
+            })
+
+            if (!existingLabels.some((item) => item.name === label)) {
+              await github.rest.issues.createLabel({
+                owner,
+                repo,
+                name: label,
+                color: '5A7DC4',
+                description: 'Weekly review of current AI writing tells and prompt bans',
+              })
+            }
+
+            const openIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              labels: label,
+              state: 'open',
+              per_page: 100,
+            })
+
+            if (openIssues.length > 0) {
+              core.info(`Open weekly audit issue already exists: #${openIssues[0].number}`)
+              return
+            }
+
+            const now = new Date()
+            const date = now.toISOString().slice(0, 10)
+            const title = `Weekly AI tells audit - ${date}`
+            const body = `## Goal
+Refresh Drafture's AI tells list with current public patterns, then sync any approved additions into runtime enforcement.
+
+## Research sweep
+Search recent results for:
+- "AI writing tells"
+- "ChatGPT writing patterns"
+- "AI slop writing signs"
+- "Wikipedia AI writing signs"
+- "Turnitin GPTZero Copyleaks writing patterns"
+- "AI-generated writing overused words"
+- "LLM marker words writing style"
+
+Prioritize:
+- detector/vendor guidance with concrete examples
+- educator/editor guidance
+- Wikipedia/Wikimedia cleanup notes
+- academic papers on lexical shifts
+- credible journalism on visible AI-writing habits
+- Drafture's own bad outputs, support replies, and marketing copy
+
+## Update checklist
+- [ ] Add accepted findings to \`00_Panel/ai_tells_library.md\`
+- [ ] Sync runtime phrases/words into \`src/lib/humanization/forbidden-patterns.ts\`
+- [ ] Sync model-facing bans into \`src/lib/humanization/prompts.ts\`
+- [ ] Bump \`PROMPT_VERSION\` if prompt behavior changes
+- [ ] Run \`npm run typecheck\`
+- [ ] Add a dated update-history entry
+
+## Promotion rule
+Only add a tell if it appears in at least two credible places, or if it directly matches a bad Drafture output. Avoid adding normal human style as a blanket ban unless it is already a Drafture house rule.
+
+## Notes
+\`00_Panel/\` is gitignored locally, so force-add it intentionally if this audit needs to be versioned.`
+
+            const issue = await github.rest.issues.create({
+              owner,
+              repo,
+              title,
+              body,
+              labels: [label],
+            })
+
+            core.info(`Created issue #${issue.data.number}: ${issue.data.html_url}`)
