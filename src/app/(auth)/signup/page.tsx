@@ -2,11 +2,11 @@
 
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Pen, CheckCircle, AlertCircle } from 'lucide-react'
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter()
   const params = useSearchParams()
   const planParam = params.get('plan') ?? ''
@@ -43,7 +43,7 @@ export default function SignupPage() {
 
       // If a paid plan was requested, send straight to checkout.
       if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl
+        window.location.assign(data.checkoutUrl)
         return
       }
 
@@ -157,5 +157,13 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignupForm />
+    </Suspense>
   )
 }

@@ -1,23 +1,17 @@
 /**
  * DMD-010 — Daily spend kill-switch
  *
- * Architecture: in-memory accumulator for current process lifetime (works on
- * single-instance dev). Production: swap recordSpend / getDailySpend to use
- * Supabase atomic increment once DMD-070 lands. The interface is identical —
- * it's a 10-line swap, nothing else changes.
- *
- * Vercel serverless note: each cold-start resets the in-memory counter.
- * This means the kill-switch is a best-effort guard in serverless, not a
- * hard guarantee. The hard guarantee comes from the Anthropic console spend
- * limit (set that manually NOW as a backstop — $100/day is a safe start).
- *
- * For a real DB-backed version, replace the two stub functions below.
+ * DB-backed daily spend kill-switch.
+ * Falls back to the in-memory accumulator only when Supabase is not configured
+ * so local development still works.
  */
+
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 const DAILY_CEILING_USD = parseFloat(process.env.DAILY_SPEND_CEILING_USD ?? '500')
 const ALERT_THRESHOLD_USD = DAILY_CEILING_USD * 0.8 // Alert at 80% of ceiling
 
-// In-memory accumulator — replace with DB calls post-DMD-070
+// Local fallback only. Production should use the Supabase RPCs.
 let dailySpendAccumulator = 0
 let accumulatorDate = new Date().toISOString().slice(0, 10) // YYYY-MM-DD
 
@@ -27,6 +21,17 @@ function getTodayKey(): string {
 
 /** Read today's accumulated spend in USD */
 async function getDailySpend(): Promise<number> {
+  const admin = getSupabaseAdmin()
+  if (admin) {
+    const { data, error } = await admin.rpc('get_daily_spend')
+    if (!error && data !== null && data !== undefined) return Number(data)
+    console.error(JSON.stringify({
+      event: 'spend_ledger_read_error',
+      error: error?.message ?? 'unknown',
+      timestamp: new Date().toISOString(),
+    }))
+  }
+
   const today = getTodayKey()
   // Reset in-memory counter if day rolled over
   if (accumulatorDate !== today) {
@@ -38,6 +43,18 @@ async function getDailySpend(): Promise<number> {
 
 /** Add to today's spend total */
 async function recordSpend(costUsd: number): Promise<void> {
+  const admin = getSupabaseAdmin()
+  if (admin) {
+    const { error } = await admin.rpc('record_spend', { p_cost_usd: costUsd })
+    if (!error) return
+    console.error(JSON.stringify({
+      event: 'spend_ledger_write_error',
+      error: error.message,
+      cost_usd: costUsd.toFixed(6),
+      timestamp: new Date().toISOString(),
+    }))
+  }
+
   const today = getTodayKey()
   if (accumulatorDate !== today) {
     dailySpendAccumulator = 0

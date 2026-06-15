@@ -5,9 +5,9 @@
  */
 
 import { NextResponse } from 'next/server'
+import { PROMPT_VERSION } from '@/lib/humanization/prompts'
 
 const APP_VERSION = process.env.npm_package_version ?? '0.1.0'
-const PROMPT_VERSION = 'v1.2.0' // Keep in sync with PROMPT_VERSION in prompts.ts
 
 interface ServiceStatus {
   ok: boolean

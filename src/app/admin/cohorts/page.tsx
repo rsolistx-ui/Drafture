@@ -15,7 +15,6 @@
  *   5. What's the activation rate for the most recent cohort?    → stat cards
  */
 
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import {
   getRetentionMatrix,
@@ -24,24 +23,6 @@ import {
   getW4Retention,
 } from '@/lib/analytics/metrics'
 import CohortDashboard from './_components/CohortDashboard'
-
-// ── Access gate ──────────────────────────────────────────────────────────────
-async function checkAdminAccess(): Promise<boolean> {
-  const adminSecret = process.env.ADMIN_SECRET
-  if (!adminSecret) return false   // No secret set = gate is closed
-
-  const headersList = await headers()
-  const referer = headersList.get('referer') ?? ''
-
-  // Check for ?secret=... in the referer URL (for direct navigation)
-  // This is a lightweight dev-mode gate. Replace with session check on DMD-070.
-  const urlSecret = new URL(
-    referer || 'http://localhost:3000',
-    'http://localhost:3000'
-  ).searchParams.get('secret')
-
-  return urlSecret === adminSecret
-}
 
 export default async function CohortsPage({
   searchParams,

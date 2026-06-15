@@ -110,11 +110,11 @@ async function fetchMetrics(): Promise<PromptMetrics[]> {
     if (!byVersion[v]) byVersion[v] = { prompt_version: v, total_generated: 0, total_copied: 0, total_thumbs_up: 0 }
     byVersion[v].total_generated++
   }
-  for (const row of copiedRows ?? []) {
+  const currentVersion = PROMPT_VERSION
+  if ((copiedRows?.length ?? 0) > 0) {
     // post_copied doesn't store prompt_version — approximate by using current version
-    const v = PROMPT_VERSION
-    if (!byVersion[v]) byVersion[v] = { prompt_version: v, total_generated: 0, total_copied: 0, total_thumbs_up: 0 }
-    byVersion[v].total_copied++
+    if (!byVersion[currentVersion]) byVersion[currentVersion] = { prompt_version: currentVersion, total_generated: 0, total_copied: 0, total_thumbs_up: 0 }
+    byVersion[currentVersion].total_copied += copiedRows?.length ?? 0
   }
   for (const row of thumbRows ?? []) {
     const v = (row.event_data as Record<string, unknown>)?.prompt_version as string ?? PROMPT_VERSION
@@ -206,7 +206,7 @@ Provide your analysis in the following JSON structure:
 Focus on:
 - Patterns that AI detectors have learned to catch in the last 6 months
 - Any structural consistency in the outputs that could be a statistical fingerprint
-- Missing humanization dimensions not yet covered by the 13-check humanizer
+- Missing humanization dimensions not yet covered by the 14-check humanizer
 - Copy rate signals (if copy rate is low, the posts may be getting flagged at submission)
 
 Return ONLY valid JSON. No markdown, no preamble.`

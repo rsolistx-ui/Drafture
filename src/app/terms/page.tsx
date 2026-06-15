@@ -45,7 +45,7 @@ export default function TermsPage() {
 
           <h2 className="text-2xl font-bold pt-6" style={{ color: '#e0e9ff' }}>4. Plans and billing</h2>
           <ul className="list-disc pl-6 space-y-2">
-            <li>The Free plan includes 3 drafts per month. The Starter and Unlimited plans renew monthly.</li>
+            <li>The Free plan includes 3 drafts per month. Starter includes 30 drafts per month. Finals includes 150 drafts per month as fair use. Paid plans renew monthly.</li>
             <li>Stripe processes all payments. We do not store your card number.</li>
             <li>You can cancel anytime in billing settings. Cancellation takes effect at the end of your current billing period; we don&apos;t pro-rate refunds for unused time except where required by law.</li>
             <li>If a payment fails, your account is downgraded to Free until you update your payment method.</li>

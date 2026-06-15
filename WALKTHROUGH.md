@@ -122,9 +122,9 @@ Click "New project" in your dashboard.
 
 Click "Create new project". Wait about 2 minutes while it provisions.
 
-### 2.3 Run the three migrations
+### 2.3 Run the four migrations
 
-You're going to paste three SQL files into Supabase one at a time, in order.
+You're going to paste four SQL files into Supabase one at a time, in order.
 
 In the Supabase dashboard, click the SQL icon in the left sidebar (looks like `>_`). Click "New query".
 
@@ -144,6 +144,12 @@ In the Supabase dashboard, click the SQL icon in the left sidebar (looks like `>
 **Migration 3:**
 - Click "New query" again
 - Open `migrations/003_subscriptions_and_usage.sql`
+- Same drill
+- Wait for success
+
+**Migration 4:**
+- Click "New query" again
+- Open `migrations/004_profile_billing_guardrails.sql`
 - Same drill
 - Wait for success
 
@@ -348,9 +354,9 @@ Click "Products" in the left sidebar, then "Add product".
 
 After creating, click into the product and copy the price ID (starts with `price_`). It's on the right side under "Pricing".
 
-**Unlimited:**
+**Finals:**
 - Same drill
-- Name: Drafture Unlimited
+- Name: Drafture Finals
 - Price: 19.99 USD
 - Monthly recurring
 - Copy the price ID
@@ -606,7 +612,7 @@ In Stripe Dashboard, click "Activate account" (top of the page in test mode). Fi
 
 Toggle "Test mode" OFF in the top-right.
 
-Repeat step 5.3 (create Starter and Unlimited products) but in live mode this time. Copy the new live price IDs.
+Repeat step 5.3 (create Starter and Finals products) but in live mode this time. Copy the new live price IDs.
 
 ### 9.3 Get live API keys
 

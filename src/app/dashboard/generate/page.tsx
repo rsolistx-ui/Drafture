@@ -32,6 +32,12 @@ const WORD_COUNT_DEFAULTS: Record<string, { min: number; max: number }> = {
   instructor: { min: 100, max: 150 },
 }
 
+type ReadinessPacket = {
+  sourceUse: string[]
+  revisionChecks: string[]
+  explainBackQuestions: string[]
+}
+
 export default function GeneratePage() {
   const [prompt, setPrompt] = useState('')
   const [postType, setPostType] = useState<'initial' | 'classmate' | 'instructor'>('initial')
@@ -54,6 +60,7 @@ export default function GeneratePage() {
   const [wordCount, setWordCount] = useState<number | null>(null)
   const [wordTarget, setWordTarget] = useState<string>('')
   const [wordCountInRange, setWordCountInRange] = useState<boolean | null>(null)
+  const [readiness, setReadiness] = useState<ReadinessPacket | null>(null)
   const generatedAtRef = useRef<number | null>(null)
 
   // ── Instructor/classmate PDF attachment ───────────────────────────────────
@@ -86,36 +93,39 @@ export default function GeneratePage() {
 
   // ── Onboarding pre-fill + style load ─────────────────────────────────────
   useEffect(() => {
-    try {
-      // Load notes library
-      setNotesLibrary(listNoteSets())
+    const id = window.setTimeout(() => {
+      try {
+        // Load notes library
+        setNotesLibrary(listNoteSets())
 
-      // Load style fingerprint
-      const stored = localStorage.getItem(STYLE_STORAGE_KEY)
-      if (stored) {
-        const fp = JSON.parse(stored) as StyleFingerprint
-        setStyleFingerprint(fp)
-        // Default to enabled if fingerprint exists
-        const enabledFlag = localStorage.getItem(STYLE_ENABLED_KEY)
-        setStyleEnabled(enabledFlag !== 'false')
-      }
+        // Load style fingerprint
+        const stored = localStorage.getItem(STYLE_STORAGE_KEY)
+        if (stored) {
+          const fp = JSON.parse(stored) as StyleFingerprint
+          setStyleFingerprint(fp)
+          // Default to enabled if fingerprint exists
+          const enabledFlag = localStorage.getItem(STYLE_ENABLED_KEY)
+          setStyleEnabled(enabledFlag !== 'false')
+        }
 
-      // First-visit sample pre-fill
-      const seenSample = localStorage.getItem(SEEN_SAMPLE_KEY)
-      if (!seenSample) {
-        const sample = SAMPLE_PROMPTS.initial
-        setPrompt(sample.prompt)
-        setCourse(sample.course)
-        setPostType('initial')
-        const defaults = WORD_COUNT_DEFAULTS.initial
-        setMinWords(sample.minWords ?? defaults.min)
-        setMaxWords(sample.maxWords ?? defaults.max)
-        // Mark as seen so it doesn't pre-fill again
-        localStorage.setItem(SEEN_SAMPLE_KEY, '1')
+        // First-visit sample pre-fill
+        const seenSample = localStorage.getItem(SEEN_SAMPLE_KEY)
+        if (!seenSample) {
+          const sample = SAMPLE_PROMPTS.initial
+          setPrompt(sample.prompt)
+          setCourse(sample.course)
+          setPostType('initial')
+          const defaults = WORD_COUNT_DEFAULTS.initial
+          setMinWords(sample.minWords ?? defaults.min)
+          setMaxWords(sample.maxWords ?? defaults.max)
+          // Mark as seen so it doesn't pre-fill again
+          localStorage.setItem(SEEN_SAMPLE_KEY, '1')
+        }
+      } catch {
+        // localStorage unavailable — SSR safety
       }
-    } catch {
-      // localStorage unavailable — SSR safety
-    }
+    }, 0)
+    return () => window.clearTimeout(id)
   }, [])
 
   // ── Auto post-type detection on prompt change ─────────────────────────────
@@ -196,6 +206,7 @@ export default function GeneratePage() {
     if (!prompt.trim()) return
     setLoading(true)
     setResult('')
+    setReadiness(null)
     setGenerationCtx(null)
     setThumbed(false)
     setRefineFeedback('')
@@ -235,6 +246,7 @@ export default function GeneratePage() {
       if (data.wordCount) setWordCount(data.wordCount)
       if (data.wordTarget) setWordTarget(data.wordTarget)
       if (data.wordCountInRange !== undefined) setWordCountInRange(data.wordCountInRange)
+      if (data.readiness) setReadiness(data.readiness)
       generatedAtRef.current = Date.now()
       // Track usage for dashboard counter
       try { recordGeneration() } catch { /* ok */ }
@@ -321,6 +333,7 @@ export default function GeneratePage() {
       if (data.wordCount !== undefined) setWordCount(data.wordCount)
       if (data.wordTarget)              setWordTarget(data.wordTarget)
       if (data.wordCountInRange !== undefined) setWordCountInRange(data.wordCountInRange)
+      if (data.readiness) setReadiness(data.readiness)
       generatedAtRef.current = Date.now()
       // Reset feedback fields after a successful refine
       setRefineFeedback('')
@@ -512,7 +525,7 @@ export default function GeneratePage() {
                 <textarea
                   value={prompt}
                   onChange={(e) => handlePromptChange(e.target.value)}
-                  placeholder="e.g. Based on this week's reading, discuss how social media has changed political discourse. Include at least one real-world example..."
+                  placeholder="e.g. Based on this week&apos;s reading, discuss how social media has changed political discourse. Include at least one real-world example..."
                   rows={5}
                   className="w-full px-4 py-3 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 transition-all"
                   style={{
@@ -800,7 +813,7 @@ export default function GeneratePage() {
                     <label className="block text-sm font-semibold mb-1" style={{ color: '#94afee' }}>
                       Word count requirement
                     </label>
-                    <p className="text-xs mb-2" style={{ color: '#2d5299' }}>Set to match your professor's requirement.</p>
+                    <p className="text-xs mb-2" style={{ color: '#2d5299' }}>Set to match your professor&apos;s requirement.</p>
                     <div className="flex items-center gap-3">
                       <div className="flex-1">
                         <label className="block text-xs mb-1" style={{ color: '#5a7dc4' }}>Min words</label>
@@ -974,7 +987,7 @@ export default function GeneratePage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => { setResult(''); setWordCount(null); setGenerationCtx(null); setThumbed(false) }}
+                        onClick={() => { setResult(''); setWordCount(null); setReadiness(null); setGenerationCtx(null); setThumbed(false) }}
                         className="gap-1 text-xs"
                         style={{ color: '#5a7dc4' }}
                       >
@@ -1006,7 +1019,7 @@ export default function GeneratePage() {
                       style={{ backgroundColor: 'rgba(7,14,33,0.4)', border: '1px solid rgba(26,58,110,0.4)' }}
                     >
                       <span className="text-xs" style={{ color: '#2d5299' }}>
-                        ✓ 2-pass humanization · burstiness + perplexity optimized
+                        ✓ voice pass · readiness checks · revision trail
                       </span>
                       <button
                         onClick={handleThumbsUp}
@@ -1021,6 +1034,37 @@ export default function GeneratePage() {
                         {thumbed ? 'Thanks!' : 'Looks great'}
                       </button>
                     </div>
+
+                    {readiness && (
+                      <div
+                        className="mt-3 grid md:grid-cols-3 gap-3"
+                      >
+                        <div className="rounded-xl p-3" style={{ backgroundColor: 'rgba(12,28,61,0.72)', border: '1px solid rgba(26,58,110,0.5)' }}>
+                          <p className="text-xs font-bold mb-2" style={{ color: '#94afee' }}>Used in this draft</p>
+                          <ul className="space-y-1.5">
+                            {readiness.sourceUse.map((item) => (
+                              <li key={item} className="text-xs" style={{ color: '#5a7dc4' }}>{item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="rounded-xl p-3" style={{ backgroundColor: 'rgba(12,28,61,0.72)', border: '1px solid rgba(26,58,110,0.5)' }}>
+                          <p className="text-xs font-bold mb-2" style={{ color: '#94afee' }}>Before submitting</p>
+                          <ul className="space-y-1.5">
+                            {readiness.revisionChecks.map((item) => (
+                              <li key={item} className="text-xs" style={{ color: '#5a7dc4' }}>{item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="rounded-xl p-3" style={{ backgroundColor: 'rgba(12,28,61,0.72)', border: '1px solid rgba(26,58,110,0.5)' }}>
+                          <p className="text-xs font-bold mb-2" style={{ color: '#94afee' }}>Explain it back</p>
+                          <ul className="space-y-1.5">
+                            {readiness.explainBackQuestions.map((item) => (
+                              <li key={item} className="text-xs" style={{ color: '#5a7dc4' }}>{item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Refinement section */}
                     <div className="mt-2">
@@ -1057,7 +1101,7 @@ export default function GeneratePage() {
                             <textarea
                               value={refineFeedback}
                               onChange={(e) => setRefineFeedback(e.target.value)}
-                              placeholder="e.g. 'Add a specific real-world example' or 'Make the ending sound less formal' or 'Include a question for the class'"
+                              placeholder="e.g. Add a specific real-world example, make the ending sound less formal, or include a question for the class"
                               rows={3}
                               className="w-full px-3 py-2.5 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 transition-all"
                               style={{

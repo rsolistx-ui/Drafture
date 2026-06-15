@@ -40,16 +40,19 @@ export default function StylePage() {
 
   // Load from localStorage on mount
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STYLE_STORAGE_KEY)
-      if (stored) setFingerprint(JSON.parse(stored))
+    const id = window.setTimeout(() => {
+      try {
+        const stored = localStorage.getItem(STYLE_STORAGE_KEY)
+        if (stored) setFingerprint(JSON.parse(stored))
 
-      const enabled = localStorage.getItem(STYLE_ENABLED_KEY)
-      // Default to enabled if fingerprint exists and no explicit disable
-      setStyleEnabled(enabled !== 'false')
-    } catch {
-      // localStorage unavailable (SSR guard — shouldn't happen in client component)
-    }
+        const enabled = localStorage.getItem(STYLE_ENABLED_KEY)
+        // Default to enabled if fingerprint exists and no explicit disable
+        setStyleEnabled(enabled !== 'false')
+      } catch {
+        // localStorage unavailable
+      }
+    }, 0)
+    return () => window.clearTimeout(id)
   }, [])
 
   const handleToggle = () => {

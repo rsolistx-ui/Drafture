@@ -53,9 +53,9 @@ jobs:
 
             const now = new Date()
             const date = now.toISOString().slice(0, 10)
-            const title = `Weekly AI tells audit - ${date}`
+            const title = `Weekly paid-value and AI tells audit - ${date}`
             const body = `## Goal
-Refresh Drafture's AI tells list with current public patterns, then sync any approved additions into runtime enforcement.
+Refresh Drafture's AI tells list, then review whether the paid product still feels worth the subscription price.
 
 ## Research sweep
 Search recent results for:
@@ -82,6 +82,14 @@ Prioritize:
 - [ ] Bump \`PROMPT_VERSION\` if prompt behavior changes
 - [ ] Run \`npm run typecheck\`
 - [ ] Add a dated update-history entry
+
+## Paid-value checklist
+- [ ] Review latest generated outputs for generic openings, fake confidence, weak examples, and source/prompt residue
+- [ ] Review pricing against current ChatGPT, Claude, Grammarly, QuillBot, and student-specific alternatives
+- [ ] Check gross margin using average generation cost, plan limits, refund requests, and support volume
+- [ ] Check customer-facing copy for detector/evasion language
+- [ ] Check support/billing friction: cancellation, failed payment, upgrade, downgrade, and refund paths
+- [ ] Log one product improvement that would make the paid plan easier to justify
 
 ## Promotion rule
 Only add a tell if it appears in at least two credible places, or if it directly matches a bad Drafture output. Avoid adding normal human style as a blanket ban unless it is already a Drafture house rule.

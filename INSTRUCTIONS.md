@@ -16,7 +16,7 @@ If you skipped the conversation, here is what's new since the codebase moved out
 - 14-seat Devil's Advocate panel added at `00_Panel/`.
 - Auth wired end to end. Real signup, login, logout, email-confirmation callback. `middleware.ts` enforces session on `/dashboard/**` and bounces logged-in users off `/login` and `/signup`.
 - Stripe wired end to end. Checkout creation, webhook handler, customer portal. Plan changes from Stripe sync into `profiles.plan` + `profiles.plan_limit` automatically.
-- Server-side plan + monthly usage enforcement on `/api/generate`. Atomic check-and-increment via Postgres RPC. Free 3, Starter 30, Unlimited none.
+- Server-side plan + monthly usage enforcement on `/api/generate`. Atomic check-and-increment via Postgres RPC. Free 3, Starter 30, Finals 150.
 - New migration `003_subscriptions_and_usage.sql` adds `usage_counters`, `spend_ledger`, `generations`, the `increment_usage_if_under_limit` RPC, and extra `profiles` columns (`plan_limit`, `plan_renews_at`, `plan_status`).
 - Legal pages added. `/privacy`, `/terms`, `/acceptable-use`. Footer rewritten to link them.
 - Marketing repositioned. The hero, features, and meta description no longer claim to "pass detection" or "evade detectors". The product is now positioned as a writing coach that produces a first draft in the student's voice. Three panel seats hold hard veto on this framing.
@@ -54,6 +54,7 @@ In Supabase SQL editor, paste and run each file in this exact order:
 1. `migrations/001_analytics_schema.sql`
 2. `migrations/002_materialized_views.sql`
 3. `migrations/003_subscriptions_and_usage.sql`
+4. `migrations/004_profile_billing_guardrails.sql`
 
 Verification queries to paste into the SQL editor after migration 3:
 
@@ -94,11 +95,11 @@ In Stripe Dashboard > Products, create two recurring monthly products:
 | Product   | Price   | Notes                                  |
 |-----------|---------|----------------------------------------|
 | Starter   | $9.99   | Recurring monthly. 30 drafts/month.    |
-| Unlimited | $19.99  | Recurring monthly. Unlimited drafts.   |
+| Finals    | $19.99  | Recurring monthly. 150 drafts/month fair use. |
 
 Copy each price ID (starts with `price_`) into env:
 - `STRIPE_PRICE_STARTER`
-- `STRIPE_PRICE_UNLIMITED`
+- `STRIPE_PRICE_UNLIMITED` (the internal env name still backs the Finals plan)
 
 ### 3.2 Webhook endpoint
 
@@ -204,7 +205,7 @@ Then in a browser:
 1. Visit `http://localhost:3000` and confirm the new copy renders ("first draft in your voice", footer has Acceptable Use / Privacy / Terms).
 2. Click "Start for free", create an account. Confirm email if prompted.
 3. Land on `/dashboard`. Generate one draft. Confirm it works and shows month count.
-4. Go to `/pricing`, click Get Starter or Go Unlimited. Use Stripe test card `4242 4242 4242 4242`, any future date, any CVC, any ZIP.
+4. Go to `/pricing`, click Get Starter or Go Finals. Use Stripe test card `4242 4242 4242 4242`, any future date, any CVC, any ZIP.
 5. After redirect, refresh dashboard. Confirm the plan badge updates and `profiles.plan_limit` in Supabase changes from 3 to 30 or null.
 6. Generate up to the limit. Confirm the 31st request on Starter returns 402 with the upgrade message.
 7. Open Stripe customer portal via `/api/stripe/portal` (POST), cancel the subscription. Wait for the webhook. Confirm `profiles.plan` flips back to `free`.

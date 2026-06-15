@@ -38,7 +38,7 @@ type LimitConfig = (typeof LIMITS)[keyof typeof LIMITS]
 
 // Singleton clients (instantiated once per cold-start)
 let _redis: import('@upstash/redis').Redis | null = null
-let _limiters: Map<string, import('@upstash/ratelimit').Ratelimit> = new Map()
+const _limiters: Map<string, import('@upstash/ratelimit').Ratelimit> = new Map()
 let _upstashConfigured = false
 let _initAttempted = false
 

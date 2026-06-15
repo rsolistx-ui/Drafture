@@ -14,13 +14,16 @@ export default function DashboardPage() {
   const [allTime, setAllTime]       = useState(0)
 
   useEffect(() => {
-    try {
-      setHasStyle(!!localStorage.getItem(STYLE_STORAGE_KEY))
-      const usage = getUsage()
-      setPostsUsed(usage.monthCount)
-      setPostsLimit(usage.limit)
-      setAllTime(usage.allTime)
-    } catch { /* ok */ }
+    const id = window.setTimeout(() => {
+      try {
+        setHasStyle(!!localStorage.getItem(STYLE_STORAGE_KEY))
+        const usage = getUsage()
+        setPostsUsed(usage.monthCount)
+        setPostsLimit(usage.limit)
+        setAllTime(usage.allTime)
+      } catch { /* ok */ }
+    }, 0)
+    return () => window.clearTimeout(id)
   }, [])
 
   return (

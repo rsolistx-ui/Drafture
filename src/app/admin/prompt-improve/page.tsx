@@ -13,7 +13,7 @@
  *   The IP gets sharper with each cycle without autonomous code changes.
  */
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Loader2, Zap, AlertCircle, ChevronDown, ChevronUp, ArrowUpCircle } from 'lucide-react'
@@ -50,7 +50,7 @@ const PRIORITY_COLORS: Record<string, { bg: string; text: string; label: string 
   low:    { bg: 'rgba(74,222,128,0.1)',  text: '#4ade80', label: '🟢 Low' },
 }
 
-export default function PromptImprovePage() {
+function PromptImprovePanel() {
   const searchParams = useSearchParams()
   const secret = searchParams.get('secret') ?? ''
 
@@ -59,14 +59,6 @@ export default function PromptImprovePage() {
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [error, setError] = useState('')
   const [expanded, setExpanded] = useState<string | null>(null)
-
-  // Gate check
-  const [authorized, setAuthorized] = useState(false)
-  useEffect(() => {
-    // We can't verify ADMIN_SECRET client-side — the API call will gate it.
-    // Just check that a secret was provided so the page isn't blank on load.
-    setAuthorized(!!secret)
-  }, [secret])
 
   const handleAnalyze = async () => {
     setLoading(true)
@@ -95,7 +87,7 @@ export default function PromptImprovePage() {
     }
   }
 
-  if (!authorized) {
+  if (!secret) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#070e21' }}>
         <p style={{ color: '#5a7dc4' }}>Access requires <code>?secret=...</code> in the URL.</p>
@@ -322,5 +314,13 @@ export default function PromptImprovePage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function PromptImprovePage() {
+  return (
+    <Suspense fallback={null}>
+      <PromptImprovePanel />
+    </Suspense>
   )
 }

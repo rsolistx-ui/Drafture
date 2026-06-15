@@ -508,10 +508,8 @@ export async function runDiscussionWritingEngine(input: RunDiscussionEngineInput
   const costs = sumCosts([pass1Cost, pass2Cost, evalCost, fixCost])
   const similarity = maxSimilarityToHistory(evalResult.text, recentGenerations)
   let finalText = evalResult.text
-  let rerolledForFreshness = false
 
   if (similarity >= SIMILARITY_THRESHOLD && recentGenerations.length > 0) {
-    rerolledForFreshness = true
     const rerollDirective = [
       buildVariationDirective(input.postType),
       buildFreshnessDirective(input.postType, input.prompt, recentGenerations),

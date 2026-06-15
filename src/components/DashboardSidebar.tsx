@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Pen, Plus, FileText, Zap, Sparkles, BookOpen } from 'lucide-react'
+import { Pen, Plus, FileText, Zap, Sparkles, BookOpen, CreditCard } from 'lucide-react'
 import { track } from '@/lib/analytics/client'
 import { getUsage } from '@/lib/usage/storage'
 
@@ -33,6 +33,7 @@ export default function DashboardSidebar({
   postsLimit: propLimit,
 }: DashboardSidebarProps) {
   const pathname = usePathname()
+  const [billingLoading, setBillingLoading] = useState(false)
 
   // Fall back to localStorage when parent doesn't pass usage data
   const [postsUsed, setPostsUsed]   = useState(propUsed  ?? 0)
@@ -40,11 +41,14 @@ export default function DashboardSidebar({
 
   useEffect(() => {
     if (propUsed !== undefined) return   // parent already gave us real data
-    try {
-      const u = getUsage()
-      setPostsUsed(u.monthCount)
-      setPostsLimit(u.limit)
-    } catch { /* ok */ }
+    const id = window.setTimeout(() => {
+      try {
+        const u = getUsage()
+        setPostsUsed(u.monthCount)
+        setPostsLimit(u.limit)
+      } catch { /* ok */ }
+    }, 0)
+    return () => window.clearTimeout(id)
   }, [propUsed])
 
   function isActive(href: string, exact: boolean) {
@@ -52,6 +56,17 @@ export default function DashboardSidebar({
   }
 
   const usagePercent = Math.min((postsUsed / postsLimit) * 100, 100)
+
+  async function openBillingPortal() {
+    setBillingLoading(true)
+    try {
+      const res = await fetch('/api/stripe/portal', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok && data.url) window.location.href = data.url
+    } finally {
+      setBillingLoading(false)
+    }
+  }
 
   return (
     <div
@@ -143,6 +158,17 @@ export default function DashboardSidebar({
             Upgrade for more
           </Button>
         </Link>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full text-xs mt-2 gap-2"
+          style={{ color: '#5a7dc4' }}
+          onClick={openBillingPortal}
+          disabled={billingLoading}
+        >
+          <CreditCard className="w-3.5 h-3.5" />
+          {billingLoading ? 'Opening...' : 'Billing'}
+        </Button>
       </div>
     </div>
   )

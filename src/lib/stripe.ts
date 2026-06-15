@@ -49,8 +49,8 @@ export const PLANS: Record<PlanId, PlanConfig> = {
   },
   unlimited: {
     id: 'unlimited',
-    label: 'Unlimited',
-    monthlyLimit: null,
+    label: 'Finals',
+    monthlyLimit: 150,
     priceUsd: 19.99,
     stripePriceId: process.env.STRIPE_PRICE_UNLIMITED ?? null,
   },

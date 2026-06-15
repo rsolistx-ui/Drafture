@@ -65,9 +65,12 @@ export default function NotesPage() {
 
   // Load library from localStorage on mount
   useEffect(() => {
-    try {
-      setLibrary(listNoteSets())
-    } catch { /* localStorage unavailable */ }
+    const id = window.setTimeout(() => {
+      try {
+        setLibrary(listNoteSets())
+      } catch { /* localStorage unavailable */ }
+    }, 0)
+    return () => window.clearTimeout(id)
   }, [])
 
   const handleFileSelect = async (index: number, file: File) => {
